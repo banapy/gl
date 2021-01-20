@@ -1,0 +1,25 @@
+export declare function rectangle(x: number, y: number, width: number, height: number): number[];
+export declare function fAlpha(x: number, y: number): number[];
+export declare function randomInt(range: number): number;
+export declare const kernels: {
+    normal: number[];
+    gaussianBlur: number[];
+    gaussianBlur2: number[];
+    gaussianBlur3: number[];
+    unsharpen: number[];
+    sharpness: number[];
+    sharpen: number[];
+    edgeDetect: number[];
+    edgeDetect2: number[];
+    edgeDetect3: number[];
+    edgeDetect4: number[];
+    edgeDetect5: number[];
+    edgeDetect6: number[];
+    sobelHorizontal: number[];
+    sobelVertical: number[];
+    previtHorizontal: number[];
+    previtVertical: number[];
+    boxBlur: number[];
+    triangleBlur: number[];
+    emboss: number[];
+};
