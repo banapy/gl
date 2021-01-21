@@ -64,5 +64,6 @@ function drawScene() {
     gl.uniformMatrix3fv(modelMatrixLocation, false, matrix)
 
     gl.drawArrays(gl.TRIANGLES, 0, 18)
+    //nothing
 }
 

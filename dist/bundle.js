@@ -354,6 +354,7 @@
         matrix = m3.scale(matrix, scale[0], scale[1]);
         gl.uniformMatrix3fv(modelMatrixLocation, false, matrix);
         gl.drawArrays(gl.TRIANGLES, 0, 18);
+        //nothing
     }
 
 })));
