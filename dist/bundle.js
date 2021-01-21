@@ -101,16 +101,11 @@
         {
             id: 4,
             vs: `
-                vec2 pixelToClipSpace(vec2 position,vec2 resolution){
-                    return ((position / resolution )*2.0-1.0)*vec2(1,-1);
-                }
                 attribute vec2 a_position;
-                uniform vec2 u_resolution;
                 uniform mat3 u_modelMatrix;
                 void main(){
                     vec2 modelPosition = (u_modelMatrix*vec3(a_position,1)).xy;
-                    vec2 clipSpace = pixelToClipSpace(modelPosition,u_resolution);
-                    gl_Position = vec4(clipSpace,0.0,1);
+                    gl_Position = vec4(modelPosition,0.0,1);
                 }
             `,
             fs: `
@@ -210,11 +205,28 @@
     }
 
     var m3 = {
+        translate: function (m, tx, ty) {
+            return m3.multiply(m, m3.translation(tx, ty));
+        },
+        rotate: function (m, angleInRadians) {
+            return m3.multiply(m, m3.rotation(angleInRadians));
+        },
+        scale: function (m, sx, sy) {
+            return m3.multiply(m, m3.scaling(sx, sy));
+        },
         translation: function (tx, ty) {
             return [
                 1, 0, 0,
                 0, 1, 0,
                 tx, ty, 1,
+            ];
+        },
+        projection: function (width, height) {
+            // 注意：这个矩阵翻转了 Y 轴，所以 0 在上方
+            return [
+                2 / width, 0, 0,
+                0, -2 / height, 0,
+                -1, 1, 1
             ];
         },
         rotation: function (angleInRadians) {
@@ -264,13 +276,19 @@
                 b20 * a02 + b21 * a12 + b22 * a22,
             ];
         },
+        identity: function () {
+            return [
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1,
+            ];
+        },
     };
 
     const { vs, fs } = Shader[3];
     const gl = initWebgl();
     const program = createProgramFromShader(gl, vs, fs);
     gl.useProgram(program);
-    let resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
     let colorLocation = gl.getUniformLocation(program, 'u_color');
     let positionLocation = gl.getAttribLocation(program, 'a_position');
     let modelMatrixLocation = gl.getUniformLocation(program, "u_modelMatrix");
@@ -281,7 +299,6 @@
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     let color = [Math.random(), Math.random(), Math.random(), 1];
     gl.uniform4fv(colorLocation, color);
-    gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
     let translation = [0, 0];
     let scale = [1, 1];
     var angleInRadians = 0;
@@ -313,11 +330,10 @@
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        let translationMatrix = m3.translation(translation[0], translation[1]);
-        let rotationMatrix = m3.rotation(angleInRadians);
-        let scaleMatrix = m3.scaling(scale[0], scale[1]);
-        let matrix = m3.multiply(translationMatrix, rotationMatrix);
-        matrix = m3.multiply(matrix, scaleMatrix);
+        let matrix = m3.projection(gl.canvas.width, gl.canvas.height);
+        matrix = m3.translate(matrix, translation[0], translation[1]);
+        matrix = m3.rotate(matrix, angleInRadians);
+        matrix = m3.scale(matrix, scale[0], scale[1]);
         gl.uniformMatrix3fv(modelMatrixLocation, false, matrix);
         gl.drawArrays(gl.TRIANGLES, 0, 18);
     }

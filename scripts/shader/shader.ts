@@ -94,16 +94,29 @@ export let Shader = [
     {
         id: 4,
         vs: `
-                vec2 pixelToClipSpace(vec2 position,vec2 resolution){
-                    return ((position / resolution )*2.0-1.0)*vec2(1,-1);
-                }
                 attribute vec2 a_position;
-                uniform vec2 u_resolution;
                 uniform mat3 u_modelMatrix;
                 void main(){
                     vec2 modelPosition = (u_modelMatrix*vec3(a_position,1)).xy;
-                    vec2 clipSpace = pixelToClipSpace(modelPosition,u_resolution);
-                    gl_Position = vec4(clipSpace,0.0,1);
+                    gl_Position = vec4(modelPosition,0.0,1);
+                }
+            `,
+        fs: `
+            precision mediump float;
+            uniform vec4 u_color;
+            void main() {
+                gl_FragColor =u_color ;
+            }
+        `
+    },
+    {
+        id: 5,
+        vs: `
+                attribute vec3 a_position;
+                uniform mat4 u_modelMatrix;
+                void main(){
+                    vec3 modelPosition = (u_modelMatrix*vec4(a_position,1)).xyz;
+                    gl_Position = vec4(modelPosition,1);
                 }
             `,
         fs: `
