@@ -9,3 +9,19 @@ export declare var m3: {
     multiply: (a: any, b: any) => number[];
     identity: () => number[];
 };
+export declare const m4: {
+    translation: (tx: number, ty: number, tz: number) => number[];
+    xRotation: (angleInRadians: number) => number[];
+    yRotation: (angleInRadians: number) => number[];
+    zRotation: (angleInRadians: number) => number[];
+    scaling: (sx: number, sy: number, sz: number) => number[];
+    translate: (m: any, tx: number, ty: number, tz: number) => number[];
+    xRotate: (m: any, angleInRadians: number) => number[];
+    yRotate: (m: any, angleInRadians: number) => number[];
+    zRotate: (m: any, angleInRadians: number) => number[];
+    scale: (m: any, sx: number, sy: number, sz: number) => number[];
+    projection: (width: number, height: number, depth: number) => number[];
+    multiply: (a: any, b: any) => number[];
+};
+export declare function radToDeg(r: any): number;
+export declare function degToRad(d: any): number;

@@ -1,5 +1,6 @@
 export declare function rectangle(x: number, y: number, width: number, height: number): number[];
 export declare function fAlpha(x: number, y: number): number[];
+export declare function fAlpha3d(): number[];
 export declare function randomInt(range: number): number;
 export declare const kernels: {
     normal: number[];
