@@ -116,6 +116,24 @@
             }
         `
         },
+        {
+            id: 5,
+            vs: `
+                attribute vec3 a_position;
+                uniform mat4 u_modelMatrix;
+                void main(){
+                    vec3 modelPosition = (u_modelMatrix*vec4(a_position,1)).xyz;
+                    gl_Position = vec4(modelPosition,1);
+                }
+            `,
+            fs: `
+            precision mediump float;
+            uniform vec4 u_color;
+            void main() {
+                gl_FragColor =u_color ;
+            }
+        `
+        },
     ];
 
     const CONFIG = {
